@@ -10,13 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
-public class GenreFrag extends Fragment
-{
+public class GenreFrag extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View vw = inflater.inflate(R.layout.fragment_genre,container,false);
+        View vw = inflater.inflate(R.layout.fragment_genre, container, false);
         return vw;
     }
 
