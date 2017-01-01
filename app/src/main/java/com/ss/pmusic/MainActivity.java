@@ -64,8 +64,10 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
             switch (position){
                 case 0 : return new AlbumFrag();
                 case 1 : return new SongsFrag();
+                case 2 : return new GenreFrag();
+                case 3 : return new PlaylistFrag();
             }
-            return new AlbumFrag();
+            return null;
         }
 
         @Override
@@ -74,4 +76,3 @@ public class MainActivity extends AppCompatActivity implements ActionBar.TabList
         }
     }
 }
-
