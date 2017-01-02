@@ -44,7 +44,6 @@
             android:id="@+id/song_duration"
             android:text="3.58 min"
             android:textSize="10sp"
-            android:layout_marginRight="5sp"
-            />
+            android:layout_marginRight="5sp" />
     </RelativeLayout>
 </RelativeLayout>

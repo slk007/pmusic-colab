@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.LayoutRes;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,16 +29,17 @@ public class SongsFrag extends Fragment {
     int count;
     ListView songsListView;
     SongItem[] songs;
-
+    ProgressBar progressBar;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View vw = inflater.inflate(R.layout.fragment_songs, container, false);
 
         songsListView = (ListView) vw.findViewById(R.id.songs_list_view);
-        //Toast.makeText(getContext(), "Number of songs = " + Integer.toString(count), Toast.LENGTH_SHORT).show();
-        makeSongsList();
-        createSongsListView();
+        progressBar = (ProgressBar) vw.findViewById(R.id.songs_loading_progress);
+
+        new LoadSongsInAnotherThread().execute();
+
         return vw;
     }
 
@@ -103,11 +106,30 @@ public class SongsFrag extends Fragment {
             return convertView;
         }
 
-            @Override
-            public int getCount () {
-                return songs.length;
-            }
-
-
+        @Override
+        public int getCount() {
+            return songs.length;
         }
     }
+
+    class LoadSongsInAnotherThread extends AsyncTask<Object, Object, Object> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            progressBar.setVisibility(View.GONE);
+            createSongsListView();
+        }
+
+        @Override
+        protected Object doInBackground(Object... objects) {
+            makeSongsList();
+            return null;
+        }
+    }
+}
