@@ -47,6 +47,7 @@ public class SongItem {
 
     }
 
+
     public void setSongTitle(String songTitle) {
         this.songTitle = songTitle;
     }
