@@ -1,7 +1,9 @@
 package com.ss.pmusic;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,14 +16,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class SongsFrag extends Fragment
-{
+import java.io.IOException;
+
+public class SongsFrag extends Fragment {
     int count;
     ListView songsListView;
+    SongItem[] songs;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -29,60 +35,79 @@ public class SongsFrag extends Fragment
 
         songsListView = (ListView) vw.findViewById(R.id.songs_list_view);
         //Toast.makeText(getContext(), "Number of songs = " + Integer.toString(count), Toast.LENGTH_SHORT).show();
-        createSongsList(getSongsList());
+        makeSongsList();
+        createSongsListView();
         return vw;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
-    String[] getSongsList () {
+    void makeSongsList() {
         Cursor cursor = getActivity().managedQuery(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                new String[] {MediaStore.Audio.Media.TITLE},
+                new String[]{
+                        MediaStore.Audio.Media.TITLE,
+                        MediaStore.Audio.Media.ARTIST,
+                        MediaStore.Audio.Media.ALBUM_ID,
+                        MediaStore.Audio.Media.DURATION
+                },
                 null,
                 null,
                 "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC"
         );
 
-        String list[];
-        list = new String [cursor.getCount()];
+        songs = new SongItem[cursor.getCount()];
         int pos = 0;
         if (cursor.moveToFirst()) {
             do {
-                list [pos++] = cursor.getString(0);
+                SongItem song = new SongItem(getContext());
+                song.setSongTitle(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
+                song.setSongAlbumId(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)));
+                song.setSongArtists(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
+                song.setSongDuration(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)));
+                songs[pos++] = song;
             } while (cursor.moveToNext());
         }
-        return list;
     }
 
-    void createSongsList (String[] list) {
-        ArrayAdapter<String> songsListViewArrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.temp_res, list);
+    void createSongsListView() {
+        ArrayAdapter<Long> songsListViewArrayAdapter = new SongsListViewAdapter(getContext(), R.layout.songs_listview_row);
         songsListView.setAdapter(songsListViewArrayAdapter);
     }
 
-    class SongsListViewAdapter extends ArrayAdapter<String> {
-        String songsList[];
-        public SongsListViewAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull String[] objects) {
-            super(context, resource, objects);
-            songsList = objects;
+    class SongsListViewAdapter extends ArrayAdapter<Long> {
+        public SongsListViewAdapter(@NonNull Context context, @LayoutRes int resource) {
+            super(context, resource);
         }
 
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = inflater.inflate(R.layout.temp_res, parent, false);
-            TextView name = (TextView) v.findViewById(R.id.song_name);
-            name.setText(songsList[position]);
-            return v;
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.songs_listview_row, parent, false);
+            }
+            ImageView albumArt = (ImageView) convertView.findViewById(R.id.song_album_art);
+            TextView title = (TextView) convertView.findViewById(R.id.song_title);
+            TextView artists = (TextView) convertView.findViewById(R.id.song_artists);
+            TextView duration = (TextView) convertView.findViewById(R.id.song_duration);
+
+            SongItem song = songs[position];
+            albumArt.setImageBitmap(song.getSongAlbumArt());
+            title.setText(song.getSongTitle());
+            artists.setText(song.getSongArtists());
+            duration.setText(song.getSongDuration());
+
+            return convertView;
         }
 
-        @Override
-        public int getCount() {
-            return songsList.length;
+            @Override
+            public int getCount () {
+                return songs.length;
+            }
+
+
         }
     }
-}

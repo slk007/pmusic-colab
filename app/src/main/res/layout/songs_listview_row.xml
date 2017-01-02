@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="2sp"
+    android:paddingTop="5sp"
+    android:paddingBottom="5sp">
+
+    <ImageView
+        android:id="@+id/song_album_art"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5sp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginRight="5sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="2sp"
+        android:layout_toRightOf="@id/song_album_art">
+
+        <TextView
+            android:id="@+id/song_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello World"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/song_artists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_below="@id/song_title"
+            android:text="Ft. Soni Shantanu" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/song_duration"
+            android:text="3.58 min"
+            android:textSize="10sp"
+            android:layout_marginRight="5sp"
+            />
+    </RelativeLayout>
+</RelativeLayout>
