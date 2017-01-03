@@ -36,10 +36,13 @@ public class SongsFrag extends Fragment {
         View vw = inflater.inflate(R.layout.fragment_songs, container, false);
 
         songsListView = (ListView) vw.findViewById(R.id.songs_list_view);
-        progressBar = (ProgressBar) vw.findViewById(R.id.songs_loading_progress);
+//        progressBar = (ProgressBar) vw.findViewById(R.id.songs_loading_progress);
 
-        new LoadSongsInAnotherThread().execute();
+//        new LoadSongsInAnotherThread().execute();
 
+
+        makeSongsList();
+        createSongsListView();
         return vw;
     }
 
@@ -111,7 +114,7 @@ public class SongsFrag extends Fragment {
             return songs.length;
         }
     }
-
+/*
     class LoadSongsInAnotherThread extends AsyncTask<Object, Object, Object> {
         @Override
         protected void onPreExecute() {
@@ -132,4 +135,5 @@ public class SongsFrag extends Fragment {
             return null;
         }
     }
+*/
 }
